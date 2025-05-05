@@ -57,7 +57,25 @@ export const getSeedData = async () => {
     },
   ]
 
+  const queries = [
+    {
+      id: randomUUID(),
+      title: 'Clarification on chronic disease history',
+      description: 'Can you specify if asthma counts?',
+      status: 'OPEN',
+      formDataId: formData[0].id,
+    },
+    {
+      id: randomUUID(),
+      title: 'Medication details',
+      description: 'Which antihypertensive meds are you taking?',
+      status: 'OPEN',
+      formDataId: formData[1].id,
+    },
+  ]
+
   return {
     formData,
+    queries,
   }
 }

@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify'
-
 import prisma from '../db/db_client'
 import { serializer } from './middleware/pre_serializer'
 import { ICountedFormData } from './schemas/formData.interface'
@@ -16,7 +15,11 @@ async function formDataRoutes(app: FastifyInstance) {
     async handler(req, reply) {
       log.debug('get form data')
       try {
-        const formData = await prisma.formData.findMany({})
+        const formData = await prisma.formData.findMany({
+          include: {
+            queries: true,
+          },
+        })
         reply.send({
           total: formData.length,
           formData,

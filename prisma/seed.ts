@@ -5,17 +5,15 @@ import { getSeedData } from './data'
 const client = new PrismaClient()
 
 const deleteAllRecords = async () => {
-  // Deletion order is important due to non-null relation constraints.
-
   await client.formData.deleteMany()
 
   console.log('All records deleted')
 }
 
 const createAllRecords = async () => {
-  // Deletion order is important due to non-null relation constraints.
   const data = await getSeedData()
   await client.formData.createMany({ data: data.formData })
+  await client.query.createMany({ data: data.queries })
 
   console.log('All records created')
 }
