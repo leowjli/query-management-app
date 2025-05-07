@@ -1,9 +1,15 @@
-import '@mantine/core/styles.css';
-import { ColorSchemeScript } from '@mantine/core';
+import "@mantine/core/styles.css";
+import { ColorSchemeScript } from "@mantine/core";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from './components/Providers';
+import { Providers } from "./components/Providers";
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +37,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
           {children}

@@ -1,14 +1,16 @@
-import { Table, Badge, ActionIcon, Tooltip } from '@mantine/core';
-import { IconPlus, IconQuestionMark, IconCheck } from '@tabler/icons-react';
-import { FormData, Query } from '../types';
-import { useState } from 'react';
-import CreateQueryModal from './CreateQueryModal';
-import ViewQueryModal from './ViewQueryModal';
+import { Table, Badge, ActionIcon, Tooltip, MantineTheme } from "@mantine/core";
+import { IconPlus, IconQuestionMark, IconCheck } from "@tabler/icons-react";
+import { FormData, Query } from "../types";
+import { useState } from "react";
+import CreateQueryModal from "./CreateQueryModal";
+import ViewQueryModal from "./ViewQueryModal";
 
 interface DataTableProps {
   data: FormData[];
   onQueryCreate: (formDataId: string, title: string, description: string) => Promise<void>;
-  onQueryUpdate: (queryId: string, status: 'OPEN' | 'RESOLVED') => Promise<void>;
+  onQueryUpdate: (queryId: string, status: "OPEN" | "RESOLVED") => Promise<void>;
+  theme: MantineTheme;
+  isDark: boolean;
 }
 
 export default function DataTable({ data, onQueryCreate, onQueryUpdate }: DataTableProps) {
@@ -31,11 +33,22 @@ export default function DataTable({ data, onQueryCreate, onQueryUpdate }: DataTa
     if (queries.length === 0) return null;
     const latestQuery = queries[queries.length - 1];
     return (
-      <Tooltip label={latestQuery.description || 'No description'}>
+      <Tooltip label={latestQuery.description || "No description"}>
         <Badge
-          color={latestQuery.status === 'OPEN' ? 'red' : 'green'}
-          leftSection={latestQuery.status === 'OPEN' ? <IconQuestionMark size={14} /> : <IconCheck size={14} />}
-          style={{ cursor: 'pointer' }}
+          color={latestQuery.status === "OPEN" ? "red" : "green"}
+          rightSection={latestQuery.status === "OPEN" ? <IconQuestionMark size={14} /> : <IconCheck size={14} />}
+          styles={{
+            root: {
+              display: "flex",
+              alignItems: "center",
+              height: 30,
+              padding: "0 12px",
+              cursor: "pointer",
+            },
+            label: {
+              lineHeight: 1,
+            },
+          }}
           onClick={() => handleViewQuery(latestQuery)}
         >
           {latestQuery.status}
@@ -46,12 +59,15 @@ export default function DataTable({ data, onQueryCreate, onQueryUpdate }: DataTa
 
   return (
     <>
-      <Table>
+      <Table 
+        highlightOnHover
+        striped
+      >
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Question</Table.Th>
-            <Table.Th>Answer</Table.Th>
-            <Table.Th>Queries</Table.Th>
+            <Table.Th style={{ fontSize: 22 }}>Question</Table.Th>
+            <Table.Th style={{ fontSize: 22 }}>Answer</Table.Th>
+            <Table.Th style={{ fontSize: 22, textAlign: "center" }}>Queries</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -59,20 +75,34 @@ export default function DataTable({ data, onQueryCreate, onQueryUpdate }: DataTa
             <Table.Tr key={item.id}>
               <Table.Td>{item.question}</Table.Td>
               <Table.Td>{item.answer}</Table.Td>
-              <Table.Td>
-                {item.queries.length === 0 ? (
-                  <Tooltip label="Create Query">
-                    <ActionIcon
-                      variant="subtle"
-                      color="blue"
-                      onClick={() => handleCreateQuery(item)}
-                    >
-                      <IconPlus size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-                ) : (
-                  getQueryStatus(item.queries)
-                )}
+              <Table.Td
+                style={{
+                  verticalAlign: "middle",
+                  textAlign: "center",
+                }}
+              >
+                <div 
+                  style={{ 
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%"
+                  }}
+                >
+                  {item.queries.length === 0 ? (
+                    <Tooltip label="Create Query">
+                      <ActionIcon
+                        variant="subtle"
+                        color="blue"
+                        onClick={() => handleCreateQuery(item)}
+                      >
+                        <IconPlus size={16} />
+                      </ActionIcon>
+                    </Tooltip>
+                  ) : (
+                    getQueryStatus(item.queries)
+                  )}
+                </div>
               </Table.Td>
             </Table.Tr>
           ))}
@@ -97,7 +127,7 @@ export default function DataTable({ data, onQueryCreate, onQueryUpdate }: DataTa
           onClose={() => setIsViewModalOpen(false)}
           query={selectedQuery}
           onResolve={async () => {
-            await onQueryUpdate(selectedQuery.id, 'RESOLVED');
+            await onQueryUpdate(selectedQuery.id, "RESOLVED");
             setIsViewModalOpen(false);
           }}
         />
