@@ -1,17 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Container, Title, Paper, Text, useMantineTheme, useMantineColorScheme } from "@mantine/core";
+import { Container, Title, Paper, Text, } from "@mantine/core";
 import DataTable from "./components/DataTable";
 import { FormData, FormDataResponse } from "./types";
 
 export default function Home() {
   const [data, setData] = useState<FormData[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === "dark";
 
   const fetchData = async () => {
     try {
@@ -46,7 +42,7 @@ export default function Home() {
 
       if (!res.ok) throw new Error("Failed to create query");
 
-      await fetchData(); // Refresh data after creating query
+      await fetchData();
     } catch (error) {
       console.error("Error creating query:", error);
     }
@@ -55,7 +51,7 @@ export default function Home() {
   const handleUpdateQuery = async (queryId: string, status: "OPEN" | "RESOLVED") => {
     try {
       const res = await fetch(`http://localhost:8080/queries/${queryId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -66,21 +62,31 @@ export default function Home() {
 
       if (!res.ok) throw new Error("Failed to update query");
 
-      await fetchData(); // Refresh data after updating query
+      await fetchData();
     } catch (error) {
       console.error("Error updating query:", error);
     }
   };
 
+  const handleDeleteQuery = async (queryId: string) => {
+    try {
+      const res = await fetch(`http://localhost:8080/queries/${queryId}`, {
+        method: "DELETE",
+      });
+  
+      if (!res.ok) throw new Error("Failed to delete query");
+  
+      await fetchData();
+    } catch (error) {
+      console.error("Error deleting query:", error);
+    }
+  };
+  
+
   return (
     <Container fluid py="xl" px="0" m="0">
       <Title order={1} mb="xl" pl="42" ff="poppins">Vial Query Management System</Title>
-      <Paper shadow="lg" p="xl"
-        style={{
-          backgroundColor: isDark ? theme.colors.dark[7] : theme.white,
-          color: isDark ? theme.colors.gray[1] : theme.black,
-        }}
-      >
+      <Paper shadow="lg" p="xl">
         {loading ? (
           <Text>Loading...</Text>
         ) : (
@@ -88,8 +94,7 @@ export default function Home() {
             data={data}
             onQueryCreate={handleCreateQuery}
             onQueryUpdate={handleUpdateQuery}
-            theme={theme}
-            isDark={isDark}
+            onQueryDelete={handleDeleteQuery}
           />
         )}
       </Paper>

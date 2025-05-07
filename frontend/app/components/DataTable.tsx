@@ -1,4 +1,4 @@
-import { Table, Badge, ActionIcon, Tooltip, MantineTheme } from "@mantine/core";
+import { Table, Badge, ActionIcon, Tooltip, } from "@mantine/core";
 import { IconPlus, IconQuestionMark, IconCheck } from "@tabler/icons-react";
 import { FormData, Query } from "../types";
 import { useState } from "react";
@@ -9,11 +9,12 @@ interface DataTableProps {
   data: FormData[];
   onQueryCreate: (formDataId: string, title: string, description: string) => Promise<void>;
   onQueryUpdate: (queryId: string, status: "OPEN" | "RESOLVED") => Promise<void>;
-  theme: MantineTheme;
-  isDark: boolean;
+  onQueryDelete: (queryId: string) => Promise<void>;
+  // theme: MantineTheme;
+  // isDark: boolean;
 }
 
-export default function DataTable({ data, onQueryCreate, onQueryUpdate }: DataTableProps) {
+export default function DataTable({ data, onQueryCreate, onQueryUpdate, onQueryDelete }: DataTableProps) {
   const [selectedFormData, setSelectedFormData] = useState<FormData | null>(null);
   const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -128,6 +129,10 @@ export default function DataTable({ data, onQueryCreate, onQueryUpdate }: DataTa
           query={selectedQuery}
           onResolve={async () => {
             await onQueryUpdate(selectedQuery.id, "RESOLVED");
+            setIsViewModalOpen(false);
+          }}
+          onDelete={async () => {
+            await onQueryDelete(selectedQuery.id);
             setIsViewModalOpen(false);
           }}
         />

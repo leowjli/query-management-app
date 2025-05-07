@@ -3,6 +3,7 @@ import prisma from '../db/db_client'
 import { serializer } from './middleware/pre_serializer'
 import { ICountedFormData } from './schemas/formData.interface'
 import { ApiError } from '../errors'
+import { getFormDataSchema } from './schemas/formData.schema';
 
 async function formDataRoutes(app: FastifyInstance) {
   app.setReplySerializer(serializer)
@@ -12,6 +13,7 @@ async function formDataRoutes(app: FastifyInstance) {
   app.get<{
     Reply: ICountedFormData
   }>('', {
+    schema: getFormDataSchema,
     async handler(req, reply) {
       log.debug('get form data')
       try {

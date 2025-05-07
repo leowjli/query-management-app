@@ -7,28 +7,29 @@ interface ViewQueryModalProps {
   onClose: () => void;
   query: Query;
   onResolve: () => Promise<void>;
+  onDelete: () => Promise<void>;
 }
 
-export default function ViewQueryModal({ opened, onClose, query, onResolve }: ViewQueryModalProps) {
+export default function ViewQueryModal({ opened, onClose, query, onResolve, onDelete }: ViewQueryModalProps) {
   return (
-    <Modal 
+    <Modal
       opened={opened}
       onClose={onClose}
       title={`Query | ${query.title}`}
       size="xl"
       centered
-      styles={{ 
-        title: { 
-          fontWeight: 600, 
-          width: "100%", 
-          lineHeight: 1.25 
+      styles={{
+        title: {
+          fontWeight: 600,
+          width: "100%",
+          lineHeight: 1.25
         }
       }}
-      >
+    >
       <Stack>
         <Text size="sm" fw={500}>Title: {query.title}</Text>
         <Text size="sm" fw={500}>Description: {query.description || "No description provided"}</Text>
-        
+
         <Badge
           color={query.status === "OPEN" ? "red" : "green"}
           rightSection={query.status === "RESOLVED" && <IconCheck size={14} />}
@@ -62,10 +63,13 @@ export default function ViewQueryModal({ opened, onClose, query, onResolve }: Vi
             Resolve Query
           </Button>
         )}
+        <Button color="red" onClick={onDelete}>
+          Delete Query
+        </Button>
       </Stack>
     </Modal>
   );
-} 
+}
 
 function getRelativeOrFullDate(timestamp: string | number | Date): string {
   const now = new Date();
