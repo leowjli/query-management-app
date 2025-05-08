@@ -7,9 +7,7 @@ A full stack **Query Management Application** where users can create, update, an
 - [Tech Stacks](#tech-stack)
 - [API Endpoints](#api-endpoints)  
 - [Getting Started](#getting-started)  
-- [Running Locally](#running-locally)  
-- [Contributing](#contributing)  
-- [License](#license)  
+- [Running Locally](#running-locally)
 
 ## Features  
 #### Frontend (UI)
@@ -131,50 +129,50 @@ A full stack **Query Management Application** where users can create, update, an
 ## Getting Started
 ### Installation  
 1. Clone the repository:  
-     ```bash  
-     git clone https://github.com/username/repo.git  
+     ```  
+     git clone https://github.com/leowjli/query-management-app.git
      ```  
 2. Navigate to the project directory:  
-     ```bash  
+     ```  
      cd your-repo  
      ```  
 3. Install dependencies:  
-     ```bash  
+     ```  
      npm install  
      ```
 
 ## Running Backend Locally
 
 1. Start the database container:  
-     ```bash  
+     ```  
     docker-compose build
     docker-compose up
      ```  
 2. Run the database migration
-    ```bash
+    ```
     npm run migrate
     ```
 
 3. Seed the database:
-    ```bash
+    ```
     npm run seed
     ```
 
 4. Start the server:
-    ```bash
+    ```
     npm run dev
     ```
 
 ## Running frontend Locally
 Run the development server after installation
-    ```bash
+    ```
     npm run dev
     ```
 
 ### Running Tests  
 Run the following command to execute tests:  
-```bash  
-npm test  
-```
+    ```  
+    npm test  
+    ```
 
 ### Live Site:
