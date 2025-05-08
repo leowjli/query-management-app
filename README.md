@@ -1,36 +1,47 @@
-# take-home-assignment-A
+# Vial Query Management Application  
 
-## Getting Started
-- copy the .env.example file into a .env file
-- `docker-compose build`
-- `docker-compose up`
-- `npm run migrate`
-- `npm run seed`
-- if you view your database, you should be able to see a populated form data table
-- running the following in your terminal will perform a GET request to fetch the form data
-```bash
-curl --location 'http://127.0.0.1:8080/form-data' --header 'Content-Type: application/json'
-```
+A full stack **Query Management Application** where users can create, update, and delete queries. Each query will have a title, description, date, and a status (OPEN, RESOLVED). Queries in the context of an EDC (electronic data capture) system help identify and flag incorrect data entries for patients and alert effected data managers/ users when a query needs to be resolved, and a management portal allow users to update and manage queries efficiently without losing progress on work or questions.
 
-## Introduction
-The purpose of this project is to evaluate your full stack web development skills with an example project that closely resembles your day to day tasks at Vial. 
+## Table of Contents  
+- [Features](#features) 
+- [Tech Stacks](#tech-stack)
+- [API Endpoints](#api-endpoints)  
+- [Getting Started](#getting-started)  
+- [Running Locally](#running-locally)  
+- [Contributing](#contributing)  
+- [License](#license)  
 
-You will build a simple **Query Management Application** where users can create queries. Each query will have a title, description, date, and a status (OPEN, RESOLVED). The application will consist of a simple frontend (UI), a backend API, and a database to persist the query data.
+## Features  
+#### Frontend (UI)
+- **Table View**:
+    - Displays form data with columns: Question, Answer, and Queries
+    - Hover over the Queries column to:
+        - Create a new query if none exists (with a blue "+" icon and tooltip)
+        - View query status: "OPEN" (Red with question mark) or "RESOLVED" (Green with checkmark)
+    - Fetches data from the `/form-data` endpoint
 
-Queries in the context of an EDC (electronic data capture) system help identify and flag incorrect data entries for patients and alert effected data managers/ users when a query needs to be resolved.
+- **Create Query**:
+    - Opens a modal to add a new query
+    - Allows editing the description and submitting the form
+    - Saves query data to the backend
 
-**NOTE: Images provided in the assignment are just examples, and the frontend does not need to look the same as the provided mock. Be creative with your design!**
+- **View Query**:
+    - Displays query details for "OPEN" or "RESOLVED" statuses
+    - Includes options to resolve an "OPEN" query, updating its status to "RESOLVED"
 
-- for example some images show the username information, this is not required to submit the assignment
+#### Backend (API)
+- RESTful API with the following endpoints:
+    1. Retrieve all form data with related query data
+    2. Create a new query
+    3. Update an existing query by ID
+    4. (Bonus) Delete a query by ID
 
-Some helpful links:
-
-- https://medrio.com/blog/query-management-in-clinical-trials/
-- [https://www.biopharmaservices.com/blog/data-cleaning-and-query-management-importance-in-edc/#:~:text=Query management is essential for,risk of regulatory non-compliance](https://www.biopharmaservices.com/blog/data-cleaning-and-query-management-importance-in-edc/#:~:text=Query%20management%20is%20essential%20for,risk%20of%20regulatory%20non%2Dcompliance)
-
-## Preferred workflow
-* Fork the repository
-* Create as many commits as needed, with the corresponding descriptive message/description
+#### Database
+- **Form Data Model**:
+    - Fields: `id`, `question`, `answer`
+- **Query Model**:
+    - Fields: `id`, `title`, `description`, `createdAt`, `updatedAt`, `status`, `formDataId`
+    - Relational field linking to form data 
 
 ## Tech stack
 * [Node](https://nodejs.org/en/)
@@ -40,92 +51,130 @@ Some helpful links:
 * [PostgreSQL](https://www.postgresql.org/)
 * [Docker and Compose](https://www.docker.com/)
 
-### Requirements
+## RESTful API Endpoints  
 
-1. **Frontend (UI)**:
-    - Use TypeScript / React / Next.js to build a single-page web application
-    - Implement a table view to display data that can be queried (for example below)
-        
-        ![table-view.png](./assets/table-view.png)
-        
-        - the key here is to implement a view that contains
-            - **Question Column**
-            - **Answer Column**
-            - **Queries Column**
-                - the User should be able to hover over this column and “Create Query” if no query exists (e.g. the data does not have a query associated with it)
-                    - a “+” icon should be displayed with a tooltip “Create Query”
-                - otherwise the query is either
-                    - “OPEN” - Red Status with question mark icon
-                    - “RESOLVED” - Green Status with checkmark icon
-        - the table view is fetched from the form-data endpoint
-    - User should be able to add a new query using the “Create Query” button which opens a modal like below:
-        
-        ![create-query.png](./assets/create-query.png)
-        
-        - User should be able to edit the description textbox and submit the form
-        - This data should then be saved in the backend
-            - Payload information
-                - Title (based on the **question** of clicked on data, e.g. “What was the Individual Dose of the Medication”)
-                - Description (from user input)
-                - form data id
-    - If the User is viewing a query that already exists and has a status “OPEN”
-        
-        ![open-query.png](./assets/open-query.png)
-        
-        - User should view something similar to this indicating that the query status is open
-        - User should see what the description of the query is
-        - User should see a button to “Resolve” this query
-            - when “resolve” button is clicked the api should send a request to the backend to update the query status to “RESOLVED”
-    - User should be able to view a “resolved” query
-        
-        ![resolved-query.png](./assets/resolved-query.png)
-        
-        - should clearly indicate that the query is resolved
-        - should clearly display the description text of the query
-        - should clearly display the date the query was created or updated
-2. **Backend (API)**:
-    - Build a **RESTful API for the queries**, a simple application skeleton is provided for the BE with seed data for the form data
-    - The backend should just be extending the existing application given the technologies (node.js, prisma, and seed data)
-    - Submissions that don't build upon the existing application will be immediately rejected
-    - Feel free to include additional technologies/libraries as you see fit to complete the application
-    - Including tests is optional but recommended
-    - The API should have the following endpoints:
-        - ENDPOINT 1: Retrieve a list of all form data and related query data.
-          - the list endpoint is already implemented but you will have to include the query relation
-        - ENDPOINT 2: Create a new query.
-        - ENDPOINT 3: Update an existing query by ID.
-        - (BONUS ENDPOINT): Delete a query by ID.
-3. **Database**:
-    - (Given) The **form data model** should have the following fields:
-      - `id`: Unique identifier (auto-increment or UUID).
-      - `question`: String, required
-      - `answer`: String, required
-    - The **query model** should have the following fields:
-        - `id`: Unique identifier (auto-increment or UUID).
-        - `title`: String, required.
-        - `description`: String, optional.
-        - `createdAt`: Date or string (ISO format), required.
-            - Indicates when the query was created.
-        - `updatedAt`: Date or string (ISO format), required.
-            - Indicates when the query was last updated.
-        - `status`: String, possible values (OPEN, RESOLVED).
-        - `formData`: relational field to a formData
-        - `formDataId`: the relational foreign key id of the formData
+### Base URL  
+`http://localhost:8080`  
 
-### Guidelines
+### Endpoints  
 
-- **Tech Stack**: The frontend application should be built using TypeScript/React/Next.js with Mantine as a suggested UI library. The backend application should be built using the existing provided skeleton (Node.js, TypeScript, Prisma, PSQL).
-- **Code Quality**: Please ensure your code is clean, well-organized, and well-documented. Add comments where necessary to explain key decisions.
-- **Time Management**: This is intended to be a 4+ hour assignment. Focus on getting the basic functionality working first, and add optional features if you have time.
-- **(OPTIONAL) API Documentation**: Provide basic API documentation (e.g., using Swagger or in README.md).
-- **(OPTIONAL) Deployment**: If possible, deploy your application to a service like Heroku, Vercel, or Netlify, and share the live URL with us for bonus points!
+#### 1. `GET /form-data`  
+- **Description**: Retrieve a list of all form data entries along with the associated queries
+- **Response**:  
+    ```json
+    {
+        "total": 2,
+        "formData": [
+            {
+                "id": "1",
+                "question": "What is your age?",
+                "answer": "30",
+                "queries": [
+                    {
+                        "id": "abc123",
+                        "title": "wrong age!",
+                        "description": "Value can't be >100",
+                        "status": "OPEN",
+                        "createdAt": "2024-01-01T00:00:00.000Z",
+                        "updatedAt": "2024-01-01T00:00:00.000Z"
+                    }
+                ]
+            }
+        ]
+    }
+    ```
+- **Status**: 200 OK, 400 Bad Request
 
-### Submission Instructions
+#### 2. `POST /queries`  
+- **Description**: Creates a new query for a form data  
+- **Request Body**:  
+    ```json
+    {
+        "description" : "test",
+        "formDataId" : "85d828dc-2dd6-4098-a7f3-385e874f294b",
+        "title" : "Have you ever had an allergic reaction to any medications?"
+    }
+    ```  
+- **Status**: 200 OK, 400 Bad Request
 
-- Share a GitHub repository with your code and provide instructions for how to run the project locally.
-- (OPTIONAL) If you deploy the application, include the live link in the repository’s README.
-- Ensure that your submission includes clear documentation on how to set up and run the backend and frontend.
+#### 3. `PATCH /queries/:id`  
+- **Description**: Updates status or description of an existing query  
+- **Request Body**:  
+    ```json  
+    {
+        "status": "RESOLVED",
+        "description": "Which antihypertensive meds are you taking?"
+    }  
+    ```  
+- **Response**:  
+    ```json  
+    {
+        "id": "72a25a29-34c7-4db5-9c57-66a39bb12936",
+        "title": "Medication details",
+        "description": "Which antihypertensive meds are you taking?",
+        "status": "RESOLVED",
+        "createdAt": "2025-05-07T08:08:14.897Z",
+        "updatedAt": "2025-05-07T08:09:14.678Z",
+        "formDataId": "1d58825c-db54-490c-85d2-06fc2b6eb23d"
+    }  
+    ```
+- **Status**: 200 OK, 404 Not Found
 
----
+#### 4. `DELETE /queries/:id`  
+- **Description**: Deletes a resource by ID.  
+- **Response**:  
+    ```json  
+    {"success" : true}  
+    ```
+- **Status**: 200 OK, 404 Not Found
 
-We hope you have fun with the assignment and we look forward to hearing from you!
+## Getting Started
+### Installation  
+1. Clone the repository:  
+     ```bash  
+     git clone https://github.com/username/repo.git  
+     ```  
+2. Navigate to the project directory:  
+     ```bash  
+     cd your-repo  
+     ```  
+3. Install dependencies:  
+     ```bash  
+     npm install  
+     ```
+
+## Running Backend Locally
+
+1. Start the database container:  
+     ```bash  
+    docker-compose build
+    docker-compose up
+     ```  
+2. Run the database migration
+    ```bash
+    npm run migrate
+    ```
+
+3. Seed the database:
+    ```bash
+    npm run seed
+    ```
+
+4. Start the server:
+    ```bash
+    npm run dev
+    ```
+
+## Running frontend Locally
+Run the development server after installation
+    ```bash
+    npm run dev
+    ```
+
+### Running Tests  
+Run the following command to execute tests:  
+```bash  
+npm test  
+```
+
+### Live Site:

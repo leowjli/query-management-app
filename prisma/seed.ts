@@ -5,6 +5,7 @@ import { getSeedData } from './data'
 const client = new PrismaClient()
 
 const deleteAllRecords = async () => {
+  await client.query.deleteMany()
   await client.formData.deleteMany()
 
   console.log('All records deleted')

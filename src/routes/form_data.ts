@@ -27,6 +27,7 @@ async function formDataRoutes(app: FastifyInstance) {
           formData,
         })
       } catch (err: any) {
+        console.error('ERROR in GET /form-data:', err);
         log.error({ err }, err.message)
         throw new ApiError('failed to fetch form data', 400)
       }
